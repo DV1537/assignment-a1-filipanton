@@ -1,57 +1,65 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <math.h>
 
 
-int *allocateArray(std::string fileName, int &arraySize, int &counter)
+double *allocateArray(std::string fileName, int &arraySize, int &counter)
 {
- 	int a = 0;
+ 	double input= 0;
 	std::ifstream myReadFile;
     
     myReadFile.open(fileName);
-	int *arr = new int[arraySize]{0};
+	double *arr = new double[arraySize]{0.0};
     
-    while (myReadFile >> a)
+    while (myReadFile >> input)
     {
+		input= round( input* 1000.0 ) / 1000.0;
+
 		counter++;
 		if(counter == arraySize)
 		{
-			arr[arraySize -1] = a;
+			arr[arraySize -1] = input;
 			
 		}
 
 		else
 		{
-			int *tempArray = new int[arraySize +1]{0};
+			double *tempArray = new double[arraySize +1]{0.0};
 			for(int i = 0; i < arraySize; i++)
 			{
 				tempArray[i] = arr[i];
 			}
 			delete[] arr;
 			arraySize++;
-			arr = new int[arraySize];
+			arr = new double[arraySize];
 			for(int x = 0; x < arraySize; x++)
 			{
 				arr[x] = tempArray[x]; 
 			}
-			arr[arraySize-1] = a;
+			arr[arraySize-1] = input;
 		}
 
     }
     myReadFile.close();
+	if(!myReadFile.eof())
+		{
+			exit(EXIT_FAILURE);
+			
+		}
 	
 	return arr;
 }
 
-void output(int *arr, int arraySize,int counter)
+void output(double *arr, int arraySize,int counter)
 {
-	int sum = 0;
+	double sum = 0.0;
 
 	for(int x = 0; x < arraySize; x++)
 	{
 		sum += arr[x];
 	}
-	int average = sum/counter;
+	double average = sum/counter;
 	std::cout << "Output:  ";
 
 	for(int i = 0; i < arraySize; i++)
@@ -70,11 +78,12 @@ int main()
 
 	
 
-    int *arr = allocateArray("input.in", arraySize, counter);
+    double *arr = allocateArray("input.in", arraySize, counter);
     
 	std::cout << "Input:  ";
     for(int x = 0; x < arraySize; x++)
 	{
+		
 		std::cout << arr[x] << "  ";
 	}
 	output(arr, arraySize, counter);
